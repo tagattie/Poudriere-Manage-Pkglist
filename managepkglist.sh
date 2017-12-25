@@ -34,29 +34,22 @@ done
 shift $(($OPTIND - 1))
 TARGET_FILES=$*
 
-if [ ${ADD_PKG} -eq 1 ]; then
-    for i in ${TARGET_FILES}; do
-        tmplist=$(mktemp "${TMPDIR}/managepkglist.XXXXXX")
-        cat "${i}" > "${tmplist}"
+for i in ${TARGET_FILES}; do
+    tmplist=$(mktemp "${TMPDIR}/managepkglist.XXXXXX")
+    # remove package name if already there (commented or not)
+    sort "${i}" | uniq | \
+        grep -v -E -e "^(# )*${PKG_NAME}$" > "${tmplist}"
+    # re-add package name
+    if [ ${ADD_PKG} -eq 1 ]; then
         if [ ${COMMENTED} -eq 1 ]; then
             echo -n "# " >> "${tmplist}"
         fi
         echo "${PKG_NAME}" >> "${tmplist}"
         sort "${tmplist}" | uniq > "${i}"
-        rm -f "${tmplist}"
-    done
-    exit 0
-fi
+    else # if [ ${DELETE_PKG} -eq 1 ]; then
+        mv -f "${tmplist}" "${i}"
+    fi
+    rm -f "${tmplist}"
+done
 
-if [ ${DELETE_PKG} -eq 1 ]; then
-    for i in ${TARGET_FILES}; do
-        tmplist=$(mktemp "${TMPDIR}/managepkglist.XXXXXX")
-        sort "${i}" | uniq > "${tmplist}"
-        grep -v -E -e "^(# )*${PKG_NAME}$" "${tmplist}" > "${i}"
-        rm -f "${tmplist}"
-    done
-    exit 0
-fi
-
-print_usage
 exit 0
