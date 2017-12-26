@@ -1,5 +1,8 @@
 #! /bin/sh
 
+export LANG=C
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
 print_usage() {
     echo "Usage: ${CMD_NAME} -?|[-a|-d] pkgname [-c] filename [filename ...]"
     echo "Options: "
@@ -8,6 +11,7 @@ print_usage() {
     echo "  -d pkgname: Delete \"pkgname\" package from list."
     echo "  -c: Add package as comment (for later enablement)."
     echo "  filename: Filename for the list of pakcages."
+    exit 0
 }
 
 ADD_PKG=0
