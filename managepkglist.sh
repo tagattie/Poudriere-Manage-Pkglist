@@ -51,7 +51,7 @@ for i in ${TARGET_FILES}; do
         echo "${PKG_NAME}" >> "${tmplist}"
         sort "${tmplist}" | uniq > "${i}"
     else # if [ ${DELETE_PKG} -eq 1 ]; then
-        mv -f "${tmplist}" "${i}"
+        cp -f "${tmplist}" "${i}"
     fi
     rm -f "${tmplist}"
 done
